@@ -3,7 +3,7 @@ import AmountsCard from "./AmountsCard";
 import ItemCart from "./ItemCart";
 
 export default function Cart({ toogle }) {
-  const { cart, isEmptyCart } = useProduct();
+  const { state, isEmptyCart } = useProduct();
 
   return (
     <div
@@ -20,7 +20,7 @@ export default function Cart({ toogle }) {
         ) : (
           <>
             <ul className="flex flex-col gap-2">
-              {cart.map((item) => (
+              {state.cart.map((item) => (
                 <ItemCart key={item.id } item={item}/>
               ))}
             </ul>

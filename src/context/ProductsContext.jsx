@@ -1,12 +1,8 @@
-import { createContext, useEffect, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo, useReducer, useState } from "react";
 import { products as initial_state } from "../mocks/products.json";
+import {cartReducer,initialState} from "../reducer/cart-reducer"
 
 const ProductContext = createContext();
-
-const initialCart = () => {
-  const storage = localStorage.getItem("carrito");
-  return storage ? JSON.parse(storage) : [];
-};
 
 const ProductContextProvider = ({ children }) => {
   const [products] = useState(initial_state);
@@ -14,11 +10,12 @@ const ProductContextProvider = ({ children }) => {
     categoria: "all",
     precio: 0,
   });
-  const [cart, setCart] = useState(initialCart);
+
+  const [state, dispatch] = useReducer(cartReducer,initialState)
 
   useEffect(() => {
-    localStorage.setItem("carrito", JSON.stringify(cart));
-  }, [cart]);
+    localStorage.setItem("carrito", JSON.stringify(state.cart));
+  }, [state.cart]);
 
   const productFiltered = (productos) => {
     const newProducts = productos.filter((prod) => {
@@ -30,45 +27,10 @@ const ProductContextProvider = ({ children }) => {
     return newProducts;
   };
 
-  const addItemCart = (item) => {
-    const { id } = item;
-    //Structure Clone
-    // const productInCartIndex = cart.findIndex((state) => state.id === id);
-    // if (productInCartIndex >= 0) {
-    //   //actualizando con structureClone
-    //   const newCart = structuredClone(cart);
-    //   newCart[productInCartIndex].cantidad += 1;
-    //   return setCart(newCart);
-    // } else {
-    //   setCart((prevState) => [...prevState, { ...item, cantidad: 1 }]);
-    // }
-    //Recorriendo el arreglo
-    const agregado = cart.find((item) => item.id === id);
-    if (agregado) {
-      const newCart = cart.map((cartState) =>
-        cartState.id === id
-          ? { ...cartState, cantidad: cartState.cantidad + 1 }
-          : cartState
-      );
-      setCart(newCart);
-    } else {
-      setCart((prevState) => [...prevState, { ...item, cantidad: 1 }]);
-    }
-  };
-
-  const removeItemCart = (id) => {
-    const newCart = cart.filter((item) => item.id !== id);
-    setCart(newCart);
-  };
-
-  const clearCart = () => {
-    setCart([]);
-  };
-
   const productosFiltrados = productFiltered(products);
 
   const isEmpty = productosFiltrados.length === 0;
-  const isEmptyCart = useMemo(() => cart.length === 0, [cart]);
+  const isEmptyCart = useMemo(() => state.cart.length === 0, [state.cart]);
 
   return (
     <ProductContext.Provider
@@ -78,10 +40,8 @@ const ProductContextProvider = ({ children }) => {
         setFiltros,
         isEmpty,
         isEmptyCart,
-        cart,
-        addItemCart,
-        removeItemCart,
-        clearCart,
+        state,
+        dispatch,
       }}
     >
       {children}

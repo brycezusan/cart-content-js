@@ -3,7 +3,7 @@ import { formatCurrency } from "../utils";
 import { RemoveFromCartIcon } from "./Icons";
 
 export default function ItemCart({item}) {
-  const {removeItemCart} =  useProduct()
+  const {dispatch} =  useProduct()
   return (
     <li key={item.id} className="flex gap-4  lg:justify-around items-center">
       <img
@@ -17,7 +17,7 @@ export default function ItemCart({item}) {
         <div className="flex justify-center gap-5">
           <p>{item.cantidad}</p>
           <button
-            onClick={() => removeItemCart(item.id)}
+            onClick={() =>dispatch({type:'remove-to-cart',payload:item.id})}
             className="text-red-800"
           >
             <RemoveFromCartIcon />

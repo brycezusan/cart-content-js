@@ -2,8 +2,8 @@ import { useProduct } from "../hooks/useProduct";
 import { formatCurrency } from "../utils";
 import { AddToCartIcon } from "./Icons";
 
-export default function ItemProduct({product}) {
-  const {addItemCart} =  useProduct()
+export default function ItemProduct({ product }) {
+  const { dispatch } = useProduct();
 
   return (
     <div className="bg-gray-50 rounded-md shadow">
@@ -19,11 +19,14 @@ export default function ItemProduct({product}) {
         </p>
         <button
           onClick={() =>
-            addItemCart({
-              id: product.id,
-              titulo: product.title,
-              precio: product.price,
-              imagen: product.thumbnail,
+            dispatch({
+              type: "add-to-cart",
+              payload: {
+                id: product.id,
+                titulo: product.title,
+                precio: product.price,
+                imagen: product.thumbnail,
+              },
             })
           }
           className="bg-red-500"

@@ -5,7 +5,7 @@ import useToogle from "./hooks/useToogle";
 import { useProduct } from "./hooks/useProduct";
 
 function App() {
-  const { cart } = useProduct();
+  const { state } = useProduct();
   const { toogle, handleClickToogle } = useToogle();
   return (
     <>
@@ -17,7 +17,7 @@ function App() {
               🛒
             </span>
           </h1>
-          <small className="text-red-500 font-bold">{cart.length}</small>
+          <small className="text-red-500 font-bold">{state.cart.length}</small>
         </div>
         <Filtros />
       </header>
